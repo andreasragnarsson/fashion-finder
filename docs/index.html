@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Finder - AI-Powered Fashion Discovery</title>
+    <meta name="description" content="Discover fashion items from your favorite photos. Upload any image and find similar products across Swedish and European fashion retailers.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1a1a2e;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            padding: 24px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .hero {
+            padding: 80px 0 100px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            margin-bottom: 24px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #764ba2;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .features {
+            background: white;
+            padding: 80px 0;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 24px;
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+        }
+
+        .feature h3 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+        }
+
+        .feature p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .shops {
+            background: #f8f9fa;
+            padding: 80px 0;
+        }
+
+        .shops h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .shops > p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .shop-logos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .shop-logo {
+            background: white;
+            padding: 20px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .how-it-works {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 60px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">Fashion Finder</div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="badge">AI-Powered Fashion Discovery</div>
+            <h1>Find Any Fashion Item<br>From Any Photo</h1>
+            <p>Upload a screenshot from Instagram, Pinterest, or any photo, and we'll identify the clothing items and find where to buy them across Swedish and European retailers.</p>
+            <a href="#notify" class="cta-button">Coming Soon</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>Smart Fashion Search</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">📸</div>
+                    <h3>AI Image Recognition</h3>
+                    <p>Our AI analyzes photos to identify clothing items, brands, colors, and styles with high accuracy.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Multi-Shop Search</h3>
+                    <p>Search across multiple Swedish and European fashion retailers simultaneously.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💰</div>
+                    <h3>Price Comparison</h3>
+                    <p>Compare prices including shipping and customs to find the best total cost for Swedish shoppers.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔔</div>
+                    <h3>Price Alerts</h3>
+                    <p>Add items to your watchlist and get notified when prices drop.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="shops">
+        <div class="container">
+            <h2>Partner Retailers</h2>
+            <p>We search across trusted fashion retailers</p>
+            <div class="shop-logos">
+                <div class="shop-logo">Kidsbrandstore</div>
+                <div class="shop-logo">Zalando</div>
+                <div class="shop-logo">Boozt</div>
+                <div class="shop-logo">Farfetch</div>
+                <div class="shop-logo">Giglio</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Upload a Photo</h3>
+                    <p>Take a screenshot or upload any fashion photo you like.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>AI Identifies Items</h3>
+                    <p>Our AI detects and describes each clothing item in the image.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Search & Compare</h3>
+                    <p>We search partner stores and show you where to buy with price comparison.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Shop with Confidence</h3>
+                    <p>Click through to buy from trusted retailers with full cost transparency.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Fashion Finder - AI-Powered Fashion Discovery for Swedish Shoppers</p>
+            <p style="margin-top: 8px; font-size: 0.875rem;">Stockholm, Sweden</p>
+        </div>
+    </footer>
+</body>
+</html>

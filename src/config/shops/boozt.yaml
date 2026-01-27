@@ -1,0 +1,61 @@
+# Boozt.com - Nordic fashion retailer
+id: boozt
+name: Boozt
+display_name: Boozt.com
+url: https://www.boozt.com/se/sv
+
+region: SE
+currency: SEK
+trust_score: 0.9
+
+# Product feed configuration
+feed:
+  url: "${BOOZT_FEED_URL}"  # Affiliate feed URL
+  type: csv
+  mapping:
+    id: id
+    name: title
+    brand: brand
+    price: price
+    original_price: old_price
+    category: category
+    subcategory: type
+    color: color
+    sizes: sizes
+    material: material
+    gender: gender
+    description: description
+    url: link
+    image_url: image_link
+    in_stock: availability
+
+# Affiliate configuration
+affiliate:
+  network: awin
+  id: "${AWIN_PUBLISHER_ID}"
+  url_template: "https://www.awin1.com/cread.php?awinmid=XXXXX&awinaffid={affiliate_id}&ued={url}"
+
+# Shipping to Sweden
+shipping:
+  ships_to_sweden: true
+  free_threshold: 499  # SEK
+  base_cost: 39  # SEK
+  delivery_days: 1-3
+
+# Search configuration
+scraper:
+  search_path: /se/sv/search
+  query_param: q
+  item_selector: ".product-list-item"
+  name_selector: ".product-list-item__title"
+  price_selector: ".product-list-item__price"
+  brand_selector: ".product-list-item__brand"
+  image_selector: ".product-list-item__image img"
+  link_selector: "a.product-list-item__link"
+
+# Notes
+notes: |
+  - Nordic fashion focus
+  - Fast delivery in Sweden (1-3 days)
+  - Good selection of Scandinavian brands
+  - 30-day return policy

@@ -1,0 +1,60 @@
+# Farfetch.com - Luxury fashion marketplace
+id: farfetch
+name: Farfetch
+display_name: Farfetch
+url: https://www.farfetch.com
+
+region: EU
+currency: EUR
+trust_score: 0.95
+
+# Product feed configuration
+feed:
+  url: "${FARFETCH_FEED_URL}"  # Affiliate network feed URL
+  type: csv
+  mapping:
+    id: sku
+    name: product_name
+    brand: designer
+    price: sale_price
+    original_price: retail_price
+    category: category
+    subcategory: product_type
+    color: colour
+    sizes: available_sizes
+    gender: gender
+    description: description
+    url: product_url
+    image_url: image_url
+    in_stock: availability
+
+# Affiliate configuration
+affiliate:
+  network: awin
+  id: "${AWIN_PUBLISHER_ID}"
+  url_template: "https://www.awin1.com/cread.php?awinmid=XXXXX&awinaffid={affiliate_id}&ued={url}"
+
+# Shipping to Sweden
+shipping:
+  ships_to_sweden: true
+  free_threshold: 200  # EUR (~2200 SEK)
+  base_cost: 15  # EUR
+  delivery_days: 3-5
+
+# Search configuration
+scraper:
+  search_path: /se/shopping/women/search/items.aspx
+  query_param: q
+  item_selector: "[data-testid='productCard']"
+  name_selector: "[data-testid='productCard'] h3"
+  price_selector: "[data-testid='price']"
+  brand_selector: "[data-testid='productCard'] h2"
+  image_selector: "img"
+  link_selector: "a"
+
+# Notes
+notes: |
+  - Luxury marketplace with boutiques worldwide
+  - Prices include duties for EU customers
+  - Good for high-end designer items
+  - Returns accepted within 14 days

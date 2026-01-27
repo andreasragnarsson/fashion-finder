@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source venv/bin/activate)",
+      "Bash(pip install:*)",
+      "Bash(uvicorn:*)",
+      "Bash(python -c:*)",
+      "Bash(curl:*)",
+      "Bash(pip uninstall:*)",
+      "Bash(pkill:*)",
+      "Bash(python3:*)",
+      "Bash(streamlit run:*)"
+    ]
+  }
+}

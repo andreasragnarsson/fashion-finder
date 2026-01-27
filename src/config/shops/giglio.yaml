@@ -1,0 +1,63 @@
+# Giglio.com - Italian luxury fashion retailer
+id: giglio
+name: Giglio
+display_name: Giglio.com
+url: https://www.giglio.com
+
+region: EU
+currency: EUR
+trust_score: 0.85
+
+# Product feed configuration
+feed:
+  url: "${GIGLIO_FEED_URL}"  # Affiliate feed URL
+  type: xml
+  mapping:
+    item_tag: product
+    id: id
+    name: name
+    brand: brand
+    price: price
+    original_price: list_price
+    category: category
+    subcategory: subcategory
+    color: color
+    sizes: sizes
+    material: composition
+    gender: gender
+    description: description
+    url: link
+    image_url: image
+    in_stock: availability
+
+# Affiliate configuration
+affiliate:
+  network: awin
+  id: "${AWIN_PUBLISHER_ID}"
+  url_template: "https://www.awin1.com/cread.php?awinmid=XXXXX&awinaffid={affiliate_id}&ued={url}"
+
+# Shipping to Sweden
+shipping:
+  ships_to_sweden: true
+  free_threshold: 150  # EUR
+  base_cost: 15  # EUR
+  delivery_days: 4-7
+
+# Search configuration
+scraper:
+  search_path: /en-se/search
+  query_param: q
+  item_selector: ".product-tile"
+  name_selector: ".product-tile__name"
+  price_selector: ".product-tile__price"
+  brand_selector: ".product-tile__brand"
+  image_selector: ".product-tile__image img"
+  link_selector: "a.product-tile__link"
+
+# Notes
+notes: |
+  - Italian luxury retailer based in Florence
+  - Good selection of Italian and European designers
+  - Prices in EUR, ships to Sweden
+  - Customs/VAT included for EU orders
+  - 14-day return policy

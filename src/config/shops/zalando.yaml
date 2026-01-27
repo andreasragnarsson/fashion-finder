@@ -1,0 +1,61 @@
+# Zalando.se - Major Swedish/European fashion retailer
+id: zalando_se
+name: Zalando
+display_name: Zalando.se
+url: https://www.zalando.se
+
+region: SE
+currency: SEK
+trust_score: 0.95
+
+# Product feed configuration
+feed:
+  url: "${ZALANDO_FEED_URL}"  # Zalando Partner Program feed
+  type: csv
+  mapping:
+    id: sku
+    name: name
+    brand: brand
+    price: price
+    original_price: original_price
+    category: category_path
+    subcategory: silhouette
+    color: color
+    sizes: sizes
+    material: material
+    gender: target_gender
+    description: description
+    url: url
+    image_url: image_url_large
+    in_stock: availability
+
+# Affiliate configuration
+affiliate:
+  network: zalando_partner_program
+  id: "${ZALANDO_PARTNER_ID}"
+  url_template: "https://ad.zanox.com/ppc/?XXXXX&ulp={url}"
+
+# Shipping to Sweden
+shipping:
+  ships_to_sweden: true
+  free_threshold: 0  # Always free shipping in Sweden
+  base_cost: 0
+  delivery_days: 2-5
+
+# Search configuration
+scraper:
+  search_path: /search
+  query_param: q
+  item_selector: "article[data-testid='product-tile']"
+  name_selector: "h3.cat_productName"
+  price_selector: "span.cat_price"
+  brand_selector: "h3.cat_brandName"
+  image_selector: "img.cat_image"
+  link_selector: "a"
+
+# Notes
+notes: |
+  - Free shipping and free returns in Sweden
+  - 100-day return policy
+  - Wide selection from budget to premium brands
+  - Reliable size guides
