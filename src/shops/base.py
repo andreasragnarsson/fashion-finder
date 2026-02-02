@@ -198,32 +198,116 @@ class ShopAdapter(ABC):
         )
 
     def calculate_relevance(self, product: ProductResult, query: SearchQuery) -> float:
-        """Calculate relevance score for a product against a query."""
+        """
+        Calculate relevance score for a product against a query.
+
+        Scoring weights:
+        - Brand match: 0.35 (critical for fashion)
+        - Category/type match: 0.25
+        - Query term matching: 0.20
+        - Color match: 0.10
+        - Style tags match: 0.05
+        - Size availability: 0.05
+        """
         score = 0.0
-        query_terms = query.query.lower().split()
-        product_text = f"{product.name} {product.brand or ''} {product.description or ''}".lower()
 
-        # Term matching
-        matched_terms = sum(1 for term in query_terms if term in product_text)
+        # Normalize query terms
+        query_lower = query.query.lower()
+        query_terms = [t.strip() for t in query_lower.split() if len(t.strip()) > 1]
+
+        # Build searchable product text
+        product_name_lower = (product.name or "").lower()
+        product_brand_lower = (product.brand or "").lower()
+        product_desc_lower = (product.description or "").lower()
+        product_category_lower = (product.category or "").lower()
+        product_color_lower = (product.color or "").lower()
+
+        product_text = f"{product_name_lower} {product_brand_lower} {product_desc_lower} {product_category_lower}"
+
+        # 1. Brand matching (0.35 max)
+        brand_score = 0.0
+        if query.brand:
+            query_brand_lower = query.brand.lower()
+            if product_brand_lower:
+                if query_brand_lower == product_brand_lower:
+                    brand_score = 0.35  # Exact match
+                elif query_brand_lower in product_brand_lower or product_brand_lower in query_brand_lower:
+                    brand_score = 0.25  # Partial match
+        else:
+            # Check if any query term matches brand
+            for term in query_terms:
+                if term in product_brand_lower:
+                    brand_score = max(brand_score, 0.30)
+                elif product_brand_lower and term in product_text:
+                    brand_score = max(brand_score, 0.10)
+        score += brand_score
+
+        # 2. Category/type matching (0.25 max)
+        category_score = 0.0
+        category_synonyms = {
+            "hoodie": ["hoodie", "hooded", "pullover", "sweatshirt"],
+            "jacket": ["jacket", "coat", "blazer", "parka", "bomber"],
+            "pants": ["pants", "trousers", "jeans", "chinos"],
+            "shirt": ["shirt", "blouse", "top", "tee", "t-shirt"],
+            "shoes": ["shoes", "sneakers", "boots", "trainers", "footwear"],
+            "sweater": ["sweater", "jumper", "knit", "cardigan", "pullover"],
+            "dress": ["dress", "gown"],
+            "skirt": ["skirt"],
+            "shorts": ["shorts"],
+        }
+
+        if query.category:
+            query_cat = query.category.lower()
+            synonyms = category_synonyms.get(query_cat, [query_cat])
+            if any(syn in product_name_lower or syn in product_category_lower for syn in synonyms):
+                category_score = 0.25
+        else:
+            # Check query terms for category matches
+            for term in query_terms:
+                synonyms = category_synonyms.get(term, [term])
+                if any(syn in product_name_lower or syn in product_category_lower for syn in synonyms):
+                    category_score = max(category_score, 0.20)
+        score += category_score
+
+        # 3. Query term matching (0.20 max)
         if query_terms:
-            score += (matched_terms / len(query_terms)) * 0.5
+            matched_terms = sum(1 for term in query_terms if term in product_text)
+            term_score = (matched_terms / len(query_terms)) * 0.20
+            score += term_score
 
-        # Exact brand match
-        if query.brand and product.brand:
-            if query.brand.lower() == product.brand.lower():
-                score += 0.2
+        # 4. Color matching (0.10 max)
+        color_score = 0.0
+        color_synonyms = {
+            "black": ["black", "noir", "svart"],
+            "white": ["white", "cream", "ivory", "vit"],
+            "blue": ["blue", "navy", "cobalt", "blå"],
+            "red": ["red", "crimson", "röd"],
+            "green": ["green", "olive", "grön"],
+            "gray": ["gray", "grey", "charcoal", "grå"],
+            "brown": ["brown", "tan", "camel", "brun"],
+            "pink": ["pink", "rose", "rosa"],
+            "beige": ["beige", "sand", "khaki"],
+        }
 
-        # Category match
-        if query.category and product.category:
-            if query.category.lower() in product.category.lower():
-                score += 0.15
+        if query.color:
+            query_color = query.color.lower()
+            synonyms = color_synonyms.get(query_color, [query_color])
+            if any(syn in product_color_lower or syn in product_name_lower for syn in synonyms):
+                color_score = 0.10
+        else:
+            # Check query terms for color matches
+            for term in query_terms:
+                if term in product_color_lower:
+                    color_score = max(color_score, 0.08)
+        score += color_score
 
-        # Color match
-        if query.color and product.color:
-            if query.color.lower() in product.color.lower():
-                score += 0.1
+        # 5. Style tags matching (0.05 max)
+        if query.style_tags:
+            matching_tags = sum(1 for tag in query.style_tags if tag.lower() in product_text)
+            if query.style_tags:
+                score += (matching_tags / len(query.style_tags)) * 0.05
 
-        # Size availability
+        # 6. Size availability (0.05 max)
         if query.size and product.sizes:
             if query.size.upper() in [s.upper() for s in product.sizes]:
                 score += 0.05

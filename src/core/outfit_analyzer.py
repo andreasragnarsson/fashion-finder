@@ -193,22 +193,41 @@ class OutfitAnalyzer:
         """Generate an optimized search query for an identified item."""
         parts = []
 
-        # Add brand if known
+        # Add brand if known (highest priority)
         if item.brand_guess:
             parts.append(item.brand_guess)
 
-        # Add color
-        if item.color and item.color.lower() != "unknown":
-            parts.append(item.color)
+        # Add item type (essential)
+        if item.item_type:
+            parts.append(item.item_type)
 
-        # Add item type
-        parts.append(item.item_type)
-
-        # Add key style tags (limit to 2)
-        style_tags = [tag for tag in item.style_tags if tag.lower() not in ["casual", "formal"]]
-        parts.extend(style_tags[:2])
+        # Add color (helps narrow results)
+        if item.color and item.color.lower() not in ["unknown", "multi", "multicolor"]:
+            # Simplify color if it has multiple parts
+            color = item.color.split("/")[0].split(",")[0].strip()
+            parts.append(color)
 
         return " ".join(parts)
+
+    def generate_search_params(self, item: IdentifiedItem) -> dict:
+        """
+        Generate structured search parameters from an identified item.
+
+        Returns a dict that can be used to construct a SearchQuery.
+        """
+        params = {
+            "query": self.generate_search_query(item),
+            "category": item.item_type,
+            "style_tags": item.style_tags,
+        }
+
+        if item.brand_guess:
+            params["brand"] = item.brand_guess
+
+        if item.color and item.color.lower() not in ["unknown", "multi", "multicolor"]:
+            params["color"] = item.color.split("/")[0].split(",")[0].strip()
+
+        return params
 
 
 # Module-level convenience function

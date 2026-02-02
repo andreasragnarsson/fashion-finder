@@ -12,7 +12,9 @@
       "Bash(streamlit run:*)",
       "Bash(playwright install:*)",
       "WebSearch",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }

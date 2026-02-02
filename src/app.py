@@ -463,23 +463,35 @@ def main():
             auto_search = st.session_state.pop('auto_search', False)
 
             for idx, item in enumerate(st.session_state.search_items):
-                # Build search query from item
+                # Build optimized search query from item
+                # Start with brand + item type (most important)
                 query_parts = []
                 if item.get('brand_guess'):
                     query_parts.append(item['brand_guess'])
-                query_parts.extend([item['color'], item['item_type']])
-                if item.get('search_keywords'):
-                    query_parts.extend(item['search_keywords'][:2])
+                query_parts.append(item['item_type'])
+
+                # Add color only if it's specific
+                color = item.get('color', '').lower()
+                if color and color not in ['unknown', 'multi', 'multicolor', 'various']:
+                    # Simplify color (take first if multiple)
+                    simple_color = color.split('/')[0].split(',')[0].strip()
+                    query_parts.append(simple_color)
+
                 item_query = " ".join(query_parts)
 
                 with st.expander(f"**{item['item_type'].title()}**: {item['description'][:60]}...", expanded=auto_search):
                     st.write(f"**Search query:** {item_query}")
                     if item.get('brand_guess'):
                         st.write(f"**Brand guess:** {item['brand_guess']}")
+                    st.write(f"**Color:** {item.get('color', 'N/A')}")
 
+                    # Pass structured data to leverage improved relevance scoring
                     search_data = {
                         "query": item_query,
-                        "color": item['color'],
+                        "category": item['item_type'],  # Pass category separately
+                        "brand": item.get('brand_guess'),  # Pass brand separately
+                        "color": item.get('color') if item.get('color', '').lower() not in ['unknown', 'multi'] else None,
+                        "style_tags": item.get('style_tags', []),
                         "size": item.get('size'),
                         "gender": st.session_state.get('outfit_gender'),
                         "max_price": float(budget) if budget < 20000 else None,
