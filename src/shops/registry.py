@@ -113,8 +113,9 @@ class ShopRegistry:
             from .adapters.zalando_adapter import ZalandoAdapter
             adapter = ZalandoAdapter(config)
         elif shop_id == "kidsbrandstore_se":
-            from .adapters.kidsbrandstore_adapter import KidsbrandstoreAdapter
-            adapter = KidsbrandstoreAdapter(config)
+            # Use Playwright scraper for JavaScript-rendered site
+            from .adapters.kidsbrandstore_playwright import KidsbrandstorePlaywright
+            adapter = KidsbrandstorePlaywright(config)
         else:
             # Determine adapter type based on feed configuration
             adapter_type = config.feed_type or "feed"

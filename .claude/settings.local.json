@@ -9,7 +9,10 @@
       "Bash(pip uninstall:*)",
       "Bash(pkill:*)",
       "Bash(python3:*)",
-      "Bash(streamlit run:*)"
+      "Bash(streamlit run:*)",
+      "Bash(playwright install:*)",
+      "WebSearch",
+      "Bash(git add:*)"
     ]
   }
 }
